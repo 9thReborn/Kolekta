@@ -1,0 +1,22 @@
+<h2>Merchants</h2>
+
+@if (loading()){
+  <p>Loading…</p>
+}@else if (error()) {
+  <p class="error">{{ error() }}</p>
+}@else {
+  <table>
+    <thead>
+    <tr><th>Name</th><th>Account Ref</th><th>ID</th></tr>
+    </thead>
+    <tbody>
+      @for (m of merchants(); track m.merchantId) {
+        <tr class="clickable" [routerLink]="['/merchants', m.merchantId, 'customers']">
+          <td>{{ m.name }}</td>
+          <td>{{ m.accountRef }}</td>
+          <td>{{ m.merchantId }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

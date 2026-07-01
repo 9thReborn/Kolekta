@@ -1,0 +1,27 @@
+<a routerLink="/merchants">← Back to merchants</a>
+<h2>Customers</h2>
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (customers().length === 0) {
+  <p>No customers yet for this merchant.</p>
+} @else {
+  <table>
+    <thead>
+    <tr><th>Name</th><th>Email</th><th>Account Number</th><th>Bank</th><th>Balance</th></tr>
+    </thead>
+    <tbody>
+      @for (c of customers(); track c.customerId) {
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.accountNumber }}</td>
+          <td>{{ c.bankName }}</td>
+          <td>{{ c.balanceText }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

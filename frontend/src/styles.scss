@@ -1,0 +1,10 @@
+body { font-family: system-ui, sans-serif; margin: 0; color: #1a1a1a; }
+.topbar { background: #0e0e0e; color: #fff; padding: 12px 20px; }
+main { padding: 20px; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+.error { color: #c0392b; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: #f5f5f5; }
+a { color: #0066cc; text-decoration: none; }
+a:hover { text-decoration: underline; }
