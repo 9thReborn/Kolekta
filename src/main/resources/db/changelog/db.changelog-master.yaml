@@ -1,0 +1,105 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 001-init-core
+      author: silas
+      changes:
+        - createTable:
+            tableName: merchants
+            columns:
+              - column: {name: id, type: UUID, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: account_ref, type: VARCHAR(80), constraints: {nullable: false, unique: true}}
+              - column: {name: name, type: VARCHAR(200), constraints: {nullable: false}}
+              - column: {name: fee_bps, type: INT, defaultValueNumeric: 0, constraints: {nullable: false}}
+              - column: {name: payout_bank_code, type: VARCHAR(20)}
+              - column: {name: payout_account_number, type: VARCHAR(20)}
+              - column: {name: nomba_sub_account_id, type: VARCHAR(80)}
+              - column: {name: status, type: VARCHAR(20), defaultValue: ACTIVE, constraints: {nullable: false}}
+              - column: {name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: {nullable: false}}
+
+        - createTable:
+            tableName: customers
+            columns:
+              - column: {name: id, type: UUID, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: merchant_id, type: UUID, constraints: {nullable: false}}
+              - column: {name: name, type: VARCHAR(200), constraints: {nullable: false}}
+              - column: {name: email, type: VARCHAR(200)}
+              - column: {name: phone, type: VARCHAR(30)}
+              - column: {name: kyc_tier, type: INT, defaultValueNumeric: 1, constraints: {nullable: false}}
+              - column: {name: status, type: VARCHAR(20), defaultValue: ACTIVE, constraints: {nullable: false}}
+              - column: {name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: {nullable: false}}
+        - addForeignKeyConstraint:
+            baseTableName: customers
+            baseColumnNames: merchant_id
+            referencedTableName: merchants
+            referencedColumnNames: id
+            constraintName: fk_customers_merchant
+
+        - createTable:
+            tableName: virtual_accounts
+            columns:
+              - column: {name: id, type: UUID, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: merchant_id, type: UUID, constraints: {nullable: false}}
+              - column: {name: customer_id, type: UUID, constraints: {nullable: false}}
+              - column: {name: account_ref, type: VARCHAR(80), constraints: {nullable: false, unique: true}}
+              - column: {name: nomba_account_number, type: VARCHAR(20)}
+              - column: {name: bank_name, type: VARCHAR(120)}
+              - column: {name: account_name, type: VARCHAR(200), constraints: {nullable: false}}
+              - column: {name: type, type: VARCHAR(20), defaultValue: STATIC, constraints: {nullable: false}}
+              - column: {name: expected_amount_kobo, type: BIGINT}
+              - column: {name: expiry_date, type: TIMESTAMP WITH TIME ZONE}
+              - column: {name: status, type: VARCHAR(20), defaultValue: ACTIVE, constraints: {nullable: false}}
+              - column: {name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: {nullable: false}}
+        - addForeignKeyConstraint:
+            baseTableName: virtual_accounts
+            baseColumnNames: merchant_id
+            referencedTableName: merchants
+            referencedColumnNames: id
+            constraintName: fk_va_merchant
+        - addForeignKeyConstraint:
+            baseTableName: virtual_accounts
+            baseColumnNames: customer_id
+            referencedTableName: customers
+            referencedColumnNames: id
+            constraintName: fk_va_customer
+
+  - changeSet:
+      id: 002-init-reconciliation
+      author: silas
+      changes:
+        - createTable:
+            tableName: webhook_events
+            columns:
+              - column: {name: id, type: UUID, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: request_id, type: VARCHAR(120), constraints: {nullable: false, unique: true}}
+              - column: {name: event_type, type: VARCHAR(60)}
+              - column: {name: raw_payload, type: TEXT}
+              - column: {name: signature_valid, type: BOOLEAN, defaultValueBoolean: false, constraints: {nullable: false}}
+              - column: {name: status, type: VARCHAR(20), defaultValue: RECEIVED, constraints: {nullable: false}}
+              - column: {name: received_at, type: TIMESTAMP WITH TIME ZONE, constraints: {nullable: false}}
+              - column: {name: processed_at, type: TIMESTAMP WITH TIME ZONE}
+
+        - createTable:
+            tableName: ledger_entries
+            columns:
+              - column: {name: id, type: UUID, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: merchant_id, type: UUID, constraints: {nullable: false}}
+              - column: {name: customer_id, type: UUID}
+              - column: {name: direction, type: VARCHAR(10), constraints: {nullable: false}}
+              - column: {name: amount_kobo, type: BIGINT, constraints: {nullable: false}}
+              - column: {name: currency, type: VARCHAR(10), defaultValue: NGN, constraints: {nullable: false}}
+              - column: {name: txn_group_id, type: UUID, constraints: {nullable: false}}
+              - column: {name: source_event_id, type: UUID}
+              - column: {name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: {nullable: false}}
+
+        - createTable:
+            tableName: misdirected_payments
+            columns:
+              - column: {name: id, type: UUID, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: merchant_id, type: UUID}
+              - column: {name: raw_event_id, type: UUID}
+              - column: {name: reason, type: VARCHAR(30), constraints: {nullable: false}}
+              - column: {name: amount_kobo, type: BIGINT}
+              - column: {name: status, type: VARCHAR(20), defaultValue: OPEN, constraints: {nullable: false}}
+              - column: {name: resolved_by, type: VARCHAR(120)}
+              - column: {name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: {nullable: false}}

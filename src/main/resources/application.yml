@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kolekta
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/kolekta}
+    username: ${DB_USER:kolekta}
+    password: ${DB_PASSWORD:kolekta}
+
+  jpa:
+    # Liquibase is the single source of truth for the schema.
+    # 'none' = Hibernate never creates or alters tables; it just maps to them.
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+# Nomba — secrets come from environment variables, never hard-coded.
+# Sandbox base URL confirmed from the hackathon training module.
+nomba:
+  webhook-secret: ${NOMBA_WEBHOOK_SECRET:}
+  mock: ${NOMBA_MOCK:true}
+  base-url: ${NOMBA_BASE_URL:https://sandbox.api.nomba.com/v1}
+  account-id: ${NOMBA_ACCOUNT_ID:}
+  sub-account-id: ${NOMBA_SUB_ACCOUNT_ID:}
+  client-id: ${NOMBA_CLIENT_ID:}
+  client-secret: ${NOMBA_CLIENT_SECRET:}
+  # Token lives 60 min; refresh 300s early => at the ~55-min mark.
+  token-refresh-margin-seconds: 300
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  level:
+    com.silasadinoyi.kolekta: DEBUG
+    org.hibernate.SQL: DEBUG
