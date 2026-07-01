@@ -17,10 +17,22 @@ export class Merchants implements OnInit{
   loading = signal(true);
   error = signal<string | null>(null);
 
-  ngOnInit(): void {                        // lifecycle hook: runs on component init
+  ngOnInit(): void { this.load(); }
+
+  private load(): void {
+    this.loading.set(true);
     this.api.getMerchants().subscribe({
       next: (data) => { this.merchants.set(data); this.loading.set(false); },
       error: () => { this.error.set('Failed to load merchants'); this.loading.set(false); },
+    });
+  }
+
+  delete(event: Event, merchantId: string): void {
+    event.stopPropagation();                       // don't trigger the row's navigation
+    if (!confirm('Delete this merchant?')) return;
+    this.api.deleteMerchant(merchantId).subscribe({
+      next: () => this.load(),                      // reload the list
+      error: (err) => alert(err.error?.error ?? 'Delete failed'),
     });
   }
 }

@@ -17,4 +17,8 @@ export class KolektaApi {
   getMisdirected(): Observable<MisdirectedSummary[]> {
     return this.http.get<MisdirectedSummary[]>('/api/misdirected-payments');
   }
+
+  deleteMerchant(merchantId: string): Observable<void> {
+    return this.http.delete<void>(`/api/merchants/${merchantId}`);
+  }
 }

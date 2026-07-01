@@ -7,7 +7,7 @@
 }@else {
   <table>
     <thead>
-    <tr><th>Name</th><th>Account Ref</th><th>ID</th></tr>
+    <tr><th>Name</th><th>Account Ref</th><th>ID</th><th></th></tr>
     </thead>
     <tbody>
       @for (m of merchants(); track m.merchantId) {
@@ -15,6 +15,7 @@
           <td>{{ m.name }}</td>
           <td>{{ m.accountRef }}</td>
           <td>{{ m.merchantId }}</td>
+          <td><button (click)="delete($event, m.merchantId)">Delete</button></td>
         </tr>
       }
     </tbody>
