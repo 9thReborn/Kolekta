@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.UUID;
 
@@ -32,6 +33,12 @@ public class ProvisioningController {
         return new CustomerAccountResponse(
                 va.getCustomerId(), va.getId(), va.getAccountRef(),
                 va.getNombaAccountNumber(), va.getBankName(), va.getAccountName());
+    }
+
+    @DeleteMapping("/merchants/{merchantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMerchant(@PathVariable UUID merchantId) {
+        provisioning.deleteMerchant(merchantId);
     }
 
     public record CreateMerchantRequest(@NotBlank String name) {}

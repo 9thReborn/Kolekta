@@ -59,6 +59,16 @@ public class ProvisioningService {
         return virtualAccounts.save(va);
     }
 
+    @Transactional
+    public void deleteMerchant(UUID merchantId) {
+        Merchant merchant = merchants.findById(merchantId)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown merchant: " + merchantId));
+        if (!customers.findByMerchantId(merchantId).isEmpty()) {
+            throw new IllegalStateException("Merchant has customers; cannot delete");
+        }
+        merchants.delete(merchant);
+    }
+
     private String newRef(String prefix) {
         return prefix + UUID.randomUUID().toString().replace("-", "");  // e.g. kva_ + 32 hex = 36 chars
     }
