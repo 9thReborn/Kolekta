@@ -29,4 +29,9 @@ public class QueryController {
     public List<QueryService.MisdirectedSummary> misdirected() {
         return query.listMisdirected();
     }
+
+    @GetMapping("/overview")
+    public QueryService.OverviewResponse overview() {
+        return query.getOverview();
+    }
 }

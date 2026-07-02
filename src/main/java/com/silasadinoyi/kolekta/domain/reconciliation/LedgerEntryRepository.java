@@ -12,4 +12,7 @@ public interface LedgerEntryRepository extends JpaRepository<LedgerEntry, UUID> 
     @Query("select coalesce(sum(l.amountKobo), 0) from LedgerEntry l " +
             "where l.customerId = :customerId and l.direction = :direction")
     long sumAmount(@Param("customerId") UUID customerId, @Param("direction") LedgerDirection direction);
+
+    @Query("select coalesce(sum(l.amountKobo), 0) from LedgerEntry l where l.direction = :direction")
+    long sumByDirection(@Param("direction") LedgerDirection direction);
 }
