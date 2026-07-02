@@ -6,7 +6,6 @@ import { Misdirected } from './features/misdirected/misdirected';
 import { Dashboard } from './features/dashboard/dashboard';
 
 export const routes: Routes = [
-  // { path: '', redirectTo: 'merchants', pathMatch: 'full' },
   { path: 'merchants', component: Merchants },
   { path: 'merchants/:merchantId/customers', component: Customers },
   { path: 'customers/:customerId/statement', component: CustomerStatement },
