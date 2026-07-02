@@ -43,6 +43,8 @@ management:
         include: health
 
 logging:
+  pattern:
+    level: "%5p [ref=%X{ref:-}]"
   level:
     com.silasadinoyi.kolekta: DEBUG
     org.hibernate.SQL: DEBUG

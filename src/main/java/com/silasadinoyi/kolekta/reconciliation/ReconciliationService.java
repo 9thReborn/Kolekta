@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import org.slf4j.MDC;
 
 @Service
 public class ReconciliationService {
@@ -40,49 +41,44 @@ public class ReconciliationService {
     @Transactional
     public void process(UUID eventId) {
         WebhookEvent event = events.findById(eventId).orElseThrow();
-        if (!"RECEIVED".equals(event.getStatus())) return;            // already handled
+        if (!"RECEIVED".equals(event.getStatus())) return;
 
-        if (!"virtual_account.funded".equals(event.getEventType())) { // not our concern (yet)
-            markProcessed(event);
-            return;
-        }
-
-        JsonNode data;
+        MDC.put("ref", event.getRequestId());
         try {
-            data = objectMapper.readTree(event.getRawPayload()).path("data");
-        } catch (Exception e) {
-            quarantine(null, event, "unparseable", null);
-            return;
+            if (!"virtual_account.funded".equals(event.getEventType())) { markProcessed(event); return; }
+
+            JsonNode data;
+            try {
+                data = objectMapper.readTree(event.getRawPayload()).path("data");
+            } catch (Exception e) {
+                quarantine(null, event, "unparseable", null); return;
+            }
+
+            String accountRef = data.path("accountRef").asText(null);
+            Long amountKobo = extractAmountKobo(data);
+
+            Optional<VirtualAccount> vaOpt =
+                    (accountRef == null) ? Optional.empty() : virtualAccounts.findByAccountRef(accountRef);
+
+            if (vaOpt.isEmpty())                               { quarantine(null, event, "unmatched", amountKobo); return; }
+            VirtualAccount va = vaOpt.get();
+            if (va.getStatus() != VirtualAccountStatus.ACTIVE) { quarantine(va.getMerchantId(), event, "closed", amountKobo); return; }
+            if (amountKobo == null)                            { quarantine(va.getMerchantId(), event, "unparseable", null); return; }
+            if (va.getExpectedAmountKobo() != null && !va.getExpectedAmountKobo().equals(amountKobo)) {
+                String reason = amountKobo > va.getExpectedAmountKobo() ? "overpaid" : "underpaid";
+                quarantine(va.getMerchantId(), event, reason, amountKobo); return;
+            }
+
+            UUID group = UUID.randomUUID();
+            ledger.save(new LedgerEntry(va.getMerchantId(), va.getCustomerId(),
+                    LedgerDirection.CREDIT, amountKobo, group, event.getId()));
+            ledger.save(new LedgerEntry(va.getMerchantId(), null,
+                    LedgerDirection.DEBIT, amountKobo, group, event.getId()));
+            markProcessed(event);
+            log.info("Reconciled {} kobo to customer {}", amountKobo, va.getCustomerId());
+        } finally {
+            MDC.remove("ref");
         }
-
-        String accountRef = data.path("accountRef").asText(null);
-        Long amountKobo = extractAmountKobo(data);
-
-        Optional<VirtualAccount> vaOpt =
-                (accountRef == null) ? Optional.empty() : virtualAccounts.findByAccountRef(accountRef);
-
-        if (vaOpt.isEmpty())                              { quarantine(null, event, "unmatched", amountKobo); return; }
-        VirtualAccount va = vaOpt.get();
-        if (va.getStatus() != VirtualAccountStatus.ACTIVE){ quarantine(va.getMerchantId(), event, "closed", amountKobo); return; }
-        if (amountKobo == null)                          { quarantine(va.getMerchantId(), event, "unparseable", null); return; }
-
-        // Fixed-amount accounts (invoices): enforce the exact amount.
-        if (va.getExpectedAmountKobo() != null && !va.getExpectedAmountKobo().equals(amountKobo)) {
-            String reason = amountKobo > va.getExpectedAmountKobo() ? "overpaid" : "underpaid";
-            quarantine(va.getMerchantId(), event, reason, amountKobo);
-            return;
-        }
-
-        // Happy path: one balanced transaction — credit the customer, debit the platform.
-        UUID group = UUID.randomUUID();
-        ledger.save(new LedgerEntry(va.getMerchantId(), va.getCustomerId(),
-                LedgerDirection.CREDIT, amountKobo, group, event.getId()));
-        ledger.save(new LedgerEntry(va.getMerchantId(), null,
-                LedgerDirection.DEBIT, amountKobo, group, event.getId()));
-
-        markProcessed(event);
-        log.info("Reconciled {} kobo to customer {} (event {})",
-                amountKobo, va.getCustomerId(), event.getRequestId());
     }
 
     private void quarantine(UUID merchantId, WebhookEvent event, String reason, Long amountKobo) {
