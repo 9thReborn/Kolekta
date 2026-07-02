@@ -20,3 +20,13 @@ a:hover { text-decoration: underline; }
 .topbar nav a.active, .topbar nav a:hover { color: #fff; }
 .badge { background: #fdecea; color: #c0392b; padding: 2px 8px; border-radius: 10px; font-size: 12px; text-transform: capitalize; }
 .empty { color: #2e7d32; }
+main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+h2 { font-size: 22px; margin: 0 0 16px; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+.stat { display: flex; flex-direction: column; gap: 6px; background: #fff; border: 1px solid #eee;
+  border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+a.stat:hover { border-color: #ccc; }
+.stat-label { font-size: 13px; color: #666; }
+.stat-value { font-size: 28px; font-weight: 700; }
+.stat.alert .stat-value { color: #c0392b; }

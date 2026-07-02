@@ -45,3 +45,11 @@ export interface Statement {
   balanceText: string;
   lines: StatementLine[];
 }
+
+export interface Overview {
+  merchantCount: number;
+  customerCount: number;
+  totalCollectedKobo: number;
+  totalCollectedText: string;
+  misdirectedOpenCount: number;
+}

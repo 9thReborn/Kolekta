@@ -3,6 +3,7 @@
   <nav>
     <a routerLink="/merchants" routerLinkActive="active">Merchants</a>
     <a routerLink="/misdirected" routerLinkActive="active">Misdirected</a>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
   </nav>
 </header>
 <main><router-outlet /></main>

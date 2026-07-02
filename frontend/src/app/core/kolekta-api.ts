@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable,inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import {Merchant, CustomerSummary, MisdirectedSummary, Statement} from './models';
+import {Merchant, CustomerSummary, MisdirectedSummary, Statement, Overview} from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +22,8 @@ export class KolektaApi {
   }
   getStatement(customerId: string): Observable<Statement> {
     return this.http.get<Statement>(`/api/customers/${customerId}/statement`);
+  }
+  getOverview(): Observable<Overview> {
+    return this.http.get<Overview>('/api/overview');
   }
 }
