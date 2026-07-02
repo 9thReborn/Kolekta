@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable,inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Merchant, CustomerSummary, MisdirectedSummary } from './models';
+import {Merchant, CustomerSummary, MisdirectedSummary, Statement} from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +17,10 @@ export class KolektaApi {
   getMisdirected(): Observable<MisdirectedSummary[]> {
     return this.http.get<MisdirectedSummary[]>('/api/misdirected-payments');
   }
-
   deleteMerchant(merchantId: string): Observable<void> {
     return this.http.delete<void>(`/api/merchants/${merchantId}`);
+  }
+  getStatement(customerId: string): Observable<Statement> {
+    return this.http.get<Statement>(`/api/customers/${customerId}/statement`);
   }
 }

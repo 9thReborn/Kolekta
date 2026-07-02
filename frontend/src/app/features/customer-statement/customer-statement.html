@@ -1,0 +1,35 @@
+<a class="link" (click)="back()">← Back</a>
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (statement(); as s) {
+  <h2>Statement — {{ s.customerName }}</h2>
+
+  <div class="summary">
+    <div class="card"><span class="label">Total Credits</span><span class="value">{{ s.totalCreditsText }}</span></div>
+    <div class="card"><span class="label">Total Debits</span><span class="value">{{ s.totalDebitsText }}</span></div>
+    <div class="card"><span class="label">Balance</span><span class="value">{{ s.balanceText }}</span></div>
+  </div>
+
+  @if (s.lines.length === 0) {
+    <p>No transactions yet.</p>
+  } @else {
+    <table>
+      <thead>
+      <tr><th>Date</th><th>Type</th><th>Amount</th><th>Running Balance</th></tr>
+      </thead>
+      <tbody>
+        @for (line of s.lines; track $index) {
+          <tr>
+            <td>{{ line.date | date:'medium' }}</td>
+            <td>{{ line.direction }}</td>
+            <td>{{ line.amountText }}</td>
+            <td>{{ line.runningBalanceText }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+}

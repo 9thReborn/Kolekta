@@ -23,3 +23,25 @@ export interface MisdirectedSummary {
   status: string;
   createdAt: string;
 }
+
+export interface StatementLine {
+  date: string;
+  direction: string;
+  amountKobo: number;
+  amountText: string;
+  runningBalanceKobo: number;
+  runningBalanceText: string;
+}
+
+export interface Statement {
+  customerId: string;
+  customerName: string;
+  currency: string;
+  totalCreditsKobo: number;
+  totalCreditsText: string;
+  totalDebitsKobo: number;
+  totalDebitsText: string;
+  balanceKobo: number;
+  balanceText: string;
+  lines: StatementLine[];
+}

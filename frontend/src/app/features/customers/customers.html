@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       @for (c of customers(); track c.customerId) {
-        <tr>
+        <tr class="clickable" [routerLink]="['/customers', c.customerId, 'statement']">
           <td>{{ c.name }}</td>
           <td>{{ c.email }}</td>
           <td>{{ c.accountNumber }}</td>
