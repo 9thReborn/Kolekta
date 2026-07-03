@@ -2,28 +2,30 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable,inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import {Merchant, CustomerSummary, MisdirectedSummary, Statement, Overview} from './models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KolektaApi {
   private http = inject(HttpClient);
+  private base = environment.apiBaseUrl;
   getMerchants(): Observable<Merchant[]> {
-    return this.http.get<Merchant[]>('/api/merchants');
+    return this.http.get<Merchant[]>(`${this.base}/api/merchants`);
   }
   getCustomers(merchantId: string): Observable<CustomerSummary[]> {
-    return this.http.get<CustomerSummary[]>(`/api/merchants/${merchantId}/customers`);
+    return this.http.get<CustomerSummary[]>(`${this.base}/api/merchants/${merchantId}/customers`);
   }
   getMisdirected(): Observable<MisdirectedSummary[]> {
-    return this.http.get<MisdirectedSummary[]>('/api/misdirected-payments');
+    return this.http.get<MisdirectedSummary[]>(`${this.base}/api/misdirected-payments`);
   }
   deleteMerchant(merchantId: string): Observable<void> {
-    return this.http.delete<void>(`/api/merchants/${merchantId}`);
+    return this.http.delete<void>(`${this.base}/api/merchants/${merchantId}`);
   }
   getStatement(customerId: string): Observable<Statement> {
-    return this.http.get<Statement>(`/api/customers/${customerId}/statement`);
+    return this.http.get<Statement>(`${this.base}/api/customers/${customerId}/statement`);
   }
   getOverview(): Observable<Overview> {
-    return this.http.get<Overview>('/api/overview');
+    return this.http.get<Overview>(`${this.base}/api/overview`);
   }
 }
