@@ -10,6 +10,13 @@ import { environment } from '../../environments/environment';
 export class KolektaApi {
   private http = inject(HttpClient);
   private base = environment.apiBaseUrl;
+
+  createMerchant(name: string): Observable<Merchant> {
+    return this.http.post<Merchant>(`${this.base}/api/merchants`, { name });
+  }
+  onboardCustomer(merchantId: string, body: { name: string; email: string; phone: string }): Observable<unknown> {
+    return this.http.post(`${this.base}/api/merchants/${merchantId}/customers`, body);
+  }
   getMerchants(): Observable<Merchant[]> {
     return this.http.get<Merchant[]>(`${this.base}/api/merchants`);
   }

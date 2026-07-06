@@ -1,0 +1,21 @@
+:host { display: block; }
+.hero { background: #0e0e0e; color: #fff; padding-bottom: 72px; }
+.hero-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; }
+.logo { font-size: 22px; font-weight: 800; }
+.cta-link { color: #fff; text-decoration: none; opacity: .85; }
+.cta-link:hover { opacity: 1; }
+.hero-content { max-width: 720px; margin: 0 auto; padding: 56px 24px 0; text-align: center; }
+.hero-content h1 { font-size: 46px; line-height: 1.1; margin: 0 0 20px; }
+.lead { font-size: 20px; line-height: 1.5; color: #cfcfcf; margin: 0 auto 32px; max-width: 620px; }
+.cta { display: inline-block; background: #fff; color: #0e0e0e; padding: 14px 28px; border-radius: 10px; font-weight: 700; text-decoration: none; }
+.section { max-width: 760px; margin: 0 auto; padding: 56px 24px; }
+.section h2 { font-size: 28px; margin: 0 0 14px; }
+.section p { font-size: 18px; line-height: 1.6; color: #333; }
+.section.alt { background: #f7f7f7; max-width: none; padding-left: 0; padding-right: 0; }
+.section.alt h2, .section.alt p { max-width: 760px; margin-left: auto; margin-right: auto; padding: 0 24px; }
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; }
+.feature { border: 1px solid #eee; border-radius: 12px; padding: 20px; }
+.feature h3 { margin: 0 0 8px; font-size: 17px; }
+.feature p { font-size: 15px; color: #555; margin: 0; }
+.landing-footer { display: flex; justify-content: space-between; align-items: center; padding: 24px 32px; border-top: 1px solid #eee; font-size: 14px; color: #666; flex-wrap: wrap; gap: 8px; }
+.landing-footer a { color: #0066cc; text-decoration: none; }

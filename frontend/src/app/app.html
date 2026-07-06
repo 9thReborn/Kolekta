@@ -1,9 +1,13 @@
-<header class="topbar">
-  <h1>Kolekta</h1>
-  <nav>
-    <a routerLink="/merchants" routerLinkActive="active">Merchants</a>
-    <a routerLink="/misdirected" routerLinkActive="active">Misdirected</a>
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-  </nav>
-</header>
-<main><router-outlet /></main>
+@if (showChrome()) {
+  <header class="topbar">
+    <a routerLink="/" class="brand">Kolekta</a>
+    <nav>
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/merchants" routerLinkActive="active">Merchants</a>
+      <a routerLink="/misdirected" routerLinkActive="active">Misdirected</a>
+    </nav>
+  </header>
+  <main><router-outlet /></main>
+} @else {
+  <router-outlet />
+}

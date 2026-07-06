@@ -30,3 +30,8 @@ a.stat:hover { border-color: #ccc; }
 .stat-label { font-size: 13px; color: #666; }
 .stat-value { font-size: 28px; font-weight: 700; }
 .stat.alert .stat-value { color: #c0392b; }
+.inline-form { display: flex; gap: 8px; margin: 12px 0 20px; flex-wrap: wrap; }
+.inline-form input { padding: 8px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+.inline-form button { padding: 8px 14px; border: none; border-radius: 8px; background: #0e0e0e; color: #fff; cursor: pointer; font-size: 14px; }
+.inline-form button:disabled { opacity: 0.5; cursor: default; }
+.brand { color: #fff; font-weight: 800; font-size: 20px; text-decoration: none; }

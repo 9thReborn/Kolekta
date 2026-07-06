@@ -1,5 +1,10 @@
 <h2>Merchants</h2>
 
+<form class="inline-form" (ngSubmit)="createMerchant()">
+  <input [(ngModel)]="newMerchantName" name="name" placeholder="Merchant name" required />
+  <button type="submit" [disabled]="creating()">Add merchant</button>
+</form>
+
 @if (loading()){
   <p>Loading…</p>
 }@else if (error()) {

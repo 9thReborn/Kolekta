@@ -2,11 +2,12 @@ import { Component,inject, signal, OnInit } from '@angular/core';
 import { KolektaApi } from '../../core/kolekta-api';
 import { Merchant } from '../../core/models';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-merchants',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink,FormsModule],
   templateUrl: './merchants.html',
   styleUrl: './merchants.scss',
 })
@@ -16,6 +17,8 @@ export class Merchants implements OnInit{
   merchants = signal<Merchant[]>([]);      // signals = reactive state (v17+)
   loading = signal(true);
   error = signal<string | null>(null);
+  newMerchantName = '';
+  creating = signal(false);
 
   ngOnInit(): void { this.load(); }
 
@@ -33,6 +36,15 @@ export class Merchants implements OnInit{
     this.api.deleteMerchant(merchantId).subscribe({
       next: () => this.load(),                      // reload the list
       error: (err) => alert(err.error?.error ?? 'Delete failed'),
+    });
+  }
+  createMerchant(): void {
+    const name = this.newMerchantName.trim();
+    if (!name) return;
+    this.creating.set(true);
+    this.api.createMerchant(name).subscribe({
+      next: () => { this.newMerchantName = ''; this.creating.set(false); this.load(); },
+      error: () => { this.creating.set(false); alert('Failed to create merchant'); },
     });
   }
 }
