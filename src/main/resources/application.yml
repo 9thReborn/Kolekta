@@ -48,3 +48,11 @@ logging:
   level:
     com.silasadinoyi.kolekta: DEBUG
     org.hibernate.SQL: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET:}
+  ttl-seconds: 3600
+
+admin:
+  email: ${ADMIN_EMAIL:}
+  password: ${ADMIN_PASSWORD:}

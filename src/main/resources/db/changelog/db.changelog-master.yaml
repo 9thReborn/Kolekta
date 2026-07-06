@@ -103,3 +103,23 @@ databaseChangeLog:
               - column: {name: status, type: VARCHAR(20), defaultValue: OPEN, constraints: {nullable: false}}
               - column: {name: resolved_by, type: VARCHAR(120)}
               - column: {name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: {nullable: false}}
+
+  - changeSet:
+      id: 003-users
+      author: silas
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: email, type: VARCHAR(200), constraints: { nullable: false, unique: true } }
+              - column: { name: password_hash, type: VARCHAR(200), constraints: { nullable: false } }
+              - column: { name: role, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: merchant_id, type: UUID }
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: { nullable: false } }
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: merchant_id
+            referencedTableName: merchants
+            referencedColumnNames: id
+            constraintName: fk_users_merchant
