@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,24 +33,26 @@ public class NombaTransactionsClient {
         this.objectMapper = objectMapper;
     }
 
-    /** Fetch successful transactions in the window. Defensive: returns empty on any problem. */
-    public List<JsonNode> listSuccessful(LocalDate from, LocalDate to) {
+    /** GET /transactions/accounts/{subAccountId}. Defensive: returns empty on any problem. */
+    public List<JsonNode> listSubAccountTransactions(LocalDate from, LocalDate to) {
+        String dateFrom = from.atStartOfDay().atOffset(ZoneOffset.UTC).toString();
+        String dateTo = to.atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC).toString();
         try {
             String raw = nombaRestClient.get()
-                    .uri(b -> b.path("/transactions")
-                            .queryParam("dateFrom", from.toString())
-                            .queryParam("dateTo", to.toString())
-                            .queryParam("status", "success")
-                            .build())
+                    .uri(b -> b.path("/transactions/accounts/{subAccountId}")
+                            .queryParam("dateFrom", dateFrom)
+                            .queryParam("dateTo", dateTo)
+                            .queryParam("limit", 50)
+                            .build(props.subAccountId()))
                     .header("Authorization", "Bearer " + tokenManager.getAccessToken())
                     .header("accountId", props.accountId())
                     .retrieve()
                     .body(String.class);
 
-            JsonNode data = objectMapper.readTree(raw).path("data");
-            JsonNode txns = data.has("transactions") ? data.get("transactions") : data;
+            JsonNode results = objectMapper.readTree(raw).path("data").path("results");
             List<JsonNode> out = new ArrayList<>();
-            if (txns != null && txns.isArray()) txns.forEach(out::add);
+            if (results.isArray()) results.forEach(out::add);
+            log.debug("Requery: fetched {} sub-account transaction(s)", out.size());
             return out;
         } catch (Exception e) {
             log.warn("Requery: could not fetch transactions ({})", e.getMessage());
