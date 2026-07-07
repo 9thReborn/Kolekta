@@ -4,6 +4,7 @@ package com.silasadinoyi.kolekta.nomba.virtualaccount;
 public interface VirtualAccountProvider {
 
     ProvisionedAccount create(CreateCommand command);
+    void expire(String accountRef);
 
     /** What we ask the provider to create. */
     record CreateCommand(

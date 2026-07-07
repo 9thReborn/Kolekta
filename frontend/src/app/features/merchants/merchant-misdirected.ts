@@ -1,17 +1,16 @@
 import { Component, inject, signal, OnInit  } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { AdminApi } from '../../core/admin-api.service';
+import { UserApi } from '../../core/user-api.service';
 import { MisdirectedSummary } from '../../core/models';
 
 @Component({
-  selector: 'app-misdirected',
+  selector: 'app-merchant-misdirected',
   standalone: true,
   imports: [DatePipe],
-  templateUrl: './misdirected.html',
-  styleUrl: './misdirected.scss',
+  templateUrl: './merchant-misdirected.html',
 })
-export class Misdirected implements OnInit {
-  private api = inject(AdminApi);
+export class MerchantMisdirected implements OnInit {
+  private api = inject(UserApi);
   items = signal<MisdirectedSummary[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);

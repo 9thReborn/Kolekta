@@ -6,4 +6,5 @@ import java.util.UUID;
 
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
     List<Customer> findByMerchantId(UUID merchantId);
+    long countByMerchantId(UUID merchantId);
 }

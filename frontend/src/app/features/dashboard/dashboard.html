@@ -1,7 +1,7 @@
 <h2>Overview</h2>
 @if (overview(); as o) {
   <div class="stat-grid">
-    <a class="stat" routerLink="/merchants">
+    <a class="stat" routerLink="/admin/merchants">
       <span class="stat-label">Merchants</span>
       <span class="stat-value">{{ o.merchantCount }}</span>
     </a>
@@ -13,7 +13,7 @@
       <span class="stat-label">Total Collected</span>
       <span class="stat-value">{{ o.totalCollectedText }}</span>
     </div>
-    <a class="stat" routerLink="/misdirected" [class.alert]="o.misdirectedOpenCount > 0">
+    <a class="stat" routerLink="/admin/misdirected" [class.alert]="o.misdirectedOpenCount > 0">
       <span class="stat-label">Misdirected (open)</span>
       <span class="stat-value">{{ o.misdirectedOpenCount }}</span>
     </a>

@@ -5,8 +5,10 @@ import com.silasadinoyi.kolekta.domain.customer.CustomerRepository;
 import com.silasadinoyi.kolekta.domain.reconciliation.LedgerDirection;
 import com.silasadinoyi.kolekta.domain.reconciliation.LedgerEntry;
 import com.silasadinoyi.kolekta.domain.reconciliation.LedgerEntryRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,16 @@ public class StatementService {
                 totalDebits, formatKobo(totalDebits),
                 running, formatKobo(running),
                 lines);
+    }
+
+    @Transactional(readOnly = true)
+    public StatementResponse buildStatementForMerchant(UUID customerId, UUID merchantId) {
+        Customer customer = customers.findById(customerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        if (!customer.getMerchantId().equals(merchantId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your customer");
+        }
+        return buildStatement(customerId);   // reuse existing logic
     }
 
     /** Format kobo as naira using integer math — never floats for money. */

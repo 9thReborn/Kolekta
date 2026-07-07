@@ -21,4 +21,8 @@ public class FakeVirtualAccountProvider implements VirtualAccountProvider {
         log.info("[MOCK] Issued fake virtual account {} for ref {}", number, cmd.accountRef());
         return new ProvisionedAccount(number, "Nombank MFB (Sandbox-Mock)", cmd.accountName());
     }
+    @Override
+    public void expire(String accountRef) {
+        log.info("[MOCK] Expired virtual account {}", accountRef);
+    }
 }

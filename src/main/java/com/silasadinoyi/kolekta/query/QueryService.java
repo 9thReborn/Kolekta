@@ -76,6 +76,28 @@ public class QueryService {
                 misdirected.countByStatus("OPEN"));
     }
 
+    @Transactional(readOnly = true)
+    public MerchantOverviewResponse getMerchantOverview(UUID merchantId) {
+        long customerCount = customers.countByMerchantId(merchantId);
+        long collected = ledger.sumByMerchantAndDirection(merchantId, LedgerDirection.CREDIT);
+        long misdirectedOpen = misdirected.countByMerchantIdAndStatus(merchantId, "OPEN");
+        return new MerchantOverviewResponse(customerCount, collected, Money.formatKobo(collected), misdirectedOpen);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MisdirectedSummary> listMisdirectedForMerchant(UUID merchantId) {
+        return misdirected.findByMerchantIdOrderByCreatedAtDesc(merchantId).stream()
+                .map(m -> new MisdirectedSummary(
+                        m.getId(), m.getMerchantId(), m.getReason(),
+                        m.getAmountKobo(),
+                        m.getAmountKobo() == null ? null : Money.formatKobo(m.getAmountKobo()),
+                        m.getStatus(), m.getCreatedAt()))
+                .toList();
+    }
+
+    public record MerchantOverviewResponse(long customerCount, long totalCollectedKobo,
+                                           String totalCollectedText, long misdirectedOpenCount) {}
+
     // --- response DTOs ---
     public record MerchantSummary(UUID merchantId, String accountRef, String name) {}
     public record CustomerSummary(UUID customerId, String name, String email,

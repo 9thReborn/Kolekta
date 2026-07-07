@@ -1,11 +1,11 @@
-<a routerLink="/merchants">← Back to merchants</a>
+<a routerLink="/admin/merchants">← Back to merchants</a>
 <h2>Customers</h2>
-<form class="inline-form" (ngSubmit)="onboard()">
-  <input [(ngModel)]="newCustomer.name"  name="cname"  placeholder="Customer name" required />
-  <input [(ngModel)]="newCustomer.email" name="cemail" placeholder="Email" type="email" />
-  <input [(ngModel)]="newCustomer.phone" name="cphone" placeholder="Phone" />
-  <button type="submit" [disabled]="saving()">Onboard + issue account</button>
-</form>
+<!--<form class="inline-form" (ngSubmit)="onboard()">-->
+<!--  <input [(ngModel)]="newCustomer.name"  name="cname"  placeholder="Customer name" required />-->
+<!--  <input [(ngModel)]="newCustomer.email" name="cemail" placeholder="Email" type="email" />-->
+<!--  <input [(ngModel)]="newCustomer.phone" name="cphone" placeholder="Phone" />-->
+<!--  <button type="submit" [disabled]="saving()">Onboard + issue account</button>-->
+<!--</form>-->
 
 @if (loading()) {
   <p>Loading…</p>
@@ -20,7 +20,7 @@
     </thead>
     <tbody>
       @for (c of customers(); track c.customerId) {
-        <tr class="clickable" [routerLink]="['/customers', c.customerId, 'statement']">
+        <tr class="clickable" [routerLink]="['/admin/customers', c.customerId, 'statement']">
           <td>{{ c.name }}</td>
           <td>{{ c.email }}</td>
           <td>{{ c.accountNumber }}</td>

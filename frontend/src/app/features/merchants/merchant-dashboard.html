@@ -1,0 +1,14 @@
+<h2>Overview</h2>
+@if (overview(); as o) {
+  <div class="stat-grid">
+    <a class="stat" routerLink="/app/customers">
+      <span class="stat-label">Customers</span><span class="stat-value">{{ o.customerCount }}</span>
+    </a>
+    <div class="stat">
+      <span class="stat-label">Total Collected</span><span class="stat-value">{{ o.totalCollectedText }}</span>
+    </div>
+    <a class="stat" routerLink="/app/misdirected" [class.alert]="o.misdirectedOpenCount > 0">
+      <span class="stat-label">Misdirected (open)</span><span class="stat-value">{{ o.misdirectedOpenCount }}</span>
+    </a>
+  </div>
+} @else { <p>Loading…</p> }

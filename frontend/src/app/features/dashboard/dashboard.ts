@@ -1,6 +1,6 @@
 import { Component,inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KolektaApi } from '../../core/kolekta-api';
+import { AdminApi } from '../../core/admin-api.service';
 import { Overview } from '../../core/models';
 
 @Component({
@@ -11,7 +11,7 @@ import { Overview } from '../../core/models';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
-  private api = inject(KolektaApi);
+  private api = inject(AdminApi);
   overview = signal<Overview | null>(null);
 
   ngOnInit(): void {

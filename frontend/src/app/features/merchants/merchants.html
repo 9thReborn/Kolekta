@@ -1,9 +1,9 @@
 <h2>Merchants</h2>
 
-<form class="inline-form" (ngSubmit)="createMerchant()">
-  <input [(ngModel)]="newMerchantName" name="name" placeholder="Merchant name" required />
-  <button type="submit" [disabled]="creating()">Add merchant</button>
-</form>
+<!--<form class="inline-form" (ngSubmit)="createMerchant()">-->
+<!--  <input [(ngModel)]="newMerchantName" name="name" placeholder="Merchant name" required />-->
+<!--  <button type="submit" [disabled]="creating()">Add merchant</button>-->
+<!--</form>-->
 
 @if (loading()){
   <p>Loading…</p>
@@ -16,7 +16,7 @@
     </thead>
     <tbody>
       @for (m of merchants(); track m.merchantId) {
-        <tr class="clickable" [routerLink]="['/merchants', m.merchantId, 'customers']">
+        <tr class="clickable" [routerLink]="['/admin/merchants', m.merchantId, 'customers']">
           <td>{{ m.name }}</td>
           <td>{{ m.accountRef }}</td>
           <td>{{ m.merchantId }}</td>

@@ -1,0 +1,12 @@
+<div class="auth-wrap">
+  <form class="auth-card" (ngSubmit)="submit()">
+    <h1>Create your merchant account</h1>
+    <input [(ngModel)]="businessName" name="businessName" placeholder="Business name" required />
+    <input [(ngModel)]="email" name="email" type="email" placeholder="Email" required />
+    <input [(ngModel)]="password" name="password" type="password" placeholder="Password (min 6)" required />
+    @if (error()) { <p class="error">{{ error() }}</p> }
+    <button type="submit" [disabled]="loading()">{{ loading() ? 'Creating…' : 'Sign up' }}</button>
+    <p class="alt">Already have an account? <a routerLink="/login">Log in</a></p>
+    <a routerLink="/" class="back">← Back to home</a>
+  </form>
+</div>

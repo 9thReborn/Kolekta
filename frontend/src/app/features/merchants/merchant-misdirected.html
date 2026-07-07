@@ -1,0 +1,26 @@
+<h2>Misdirected Payments</h2>
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (items().length === 0) {
+  <p class="empty">✓ No misdirected payments — everything reconciled cleanly.</p>
+} @else {
+  <table>
+    <thead>
+    <tr><th>Reason</th><th>Amount</th><th>Status</th><th>Received</th><th>Merchant</th></tr>
+    </thead>
+    <tbody>
+      @for (m of items(); track m.id) {
+        <tr>
+          <td><span class="badge">{{ m.reason }}</span></td>
+          <td>{{ m.amountText ?? '—' }}</td>
+          <td>{{ m.status }}</td>
+          <td>{{ m.createdAt | date:'medium' }}</td>
+          <td>{{ m.merchantId ?? '—' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

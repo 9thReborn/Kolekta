@@ -7,4 +7,7 @@ import java.util.List;
 public interface MisdirectedPaymentRepository extends JpaRepository<MisdirectedPayment, UUID> {
     List<MisdirectedPayment> findTop200ByOrderByCreatedAtDesc();
     long countByStatus(String status);
+
+    List<MisdirectedPayment> findByMerchantIdOrderByCreatedAtDesc(UUID merchantId);
+    long countByMerchantIdAndStatus(UUID merchantId, String status);
 }

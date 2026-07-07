@@ -26,8 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/actuator/**", "/webhooks/**", "/internal/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/users/**").hasRole("MERCHANT")
-                        .requestMatchers("/api/**").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

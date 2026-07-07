@@ -59,6 +59,20 @@ public class NombaVirtualAccountProvider implements VirtualAccountProvider {
         var d = resp.data();
         return new ProvisionedAccount(d.bankAccountNumber(), d.bankName(), d.bankAccountName());
     }
+    @Override
+    public void expire(String accountRef) {
+        try {
+            nombaRestClient.delete()
+                    .uri("/accounts/virtual/{identifier}", accountRef)
+                    .header("Authorization", "Bearer " + tokenManager.getAccessToken())
+                    .header("accountId", props.accountId())
+                    .retrieve()
+                    .body(String.class);
+            log.debug("Expired VA {}", accountRef);
+        } catch (Exception e) {
+            log.warn("Expire VA {} failed: {}", accountRef, e.getMessage());
+        }
+    }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private record NombaRequest(String accountRef, String accountName, String currency, String bvn, String expiryDate) {}

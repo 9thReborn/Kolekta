@@ -35,3 +35,14 @@ a.stat:hover { border-color: #ccc; }
 .inline-form button { padding: 8px 14px; border: none; border-radius: 8px; background: #0e0e0e; color: #fff; cursor: pointer; font-size: 14px; }
 .inline-form button:disabled { opacity: 0.5; cursor: default; }
 .brand { color: #fff; font-weight: 800; font-size: 20px; text-decoration: none; }
+.auth-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.auth-card { display: flex; flex-direction: column; gap: 12px; width: 320px; padding: 28px; border: 1px solid #eee; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+.auth-card h1 { margin: 0 0 8px; font-size: 22px; }
+.auth-card input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+.auth-card button { padding: 10px; border: none; border-radius: 8px; background: #0e0e0e; color: #fff; font-size: 15px; cursor: pointer; }
+.auth-card button:disabled { opacity: .5; }
+.auth-card .alt { font-size: 14px; margin: 4px 0 0; }
+.auth-card .back { font-size: 13px; color: #888; }
+.topbar .spacer { flex: 1; }
+.topbar .who { color: #bbb; font-size: 13px; margin-right: 8px; }
+.topbar .logout { background: transparent; color: #fff; border: 1px solid #555; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 13px; }

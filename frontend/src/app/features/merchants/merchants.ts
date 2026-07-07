@@ -1,5 +1,5 @@
 import { Component,inject, signal, OnInit } from '@angular/core';
-import { KolektaApi } from '../../core/kolekta-api';
+import { AdminApi } from '../../core/admin-api.service';
 import { Merchant } from '../../core/models';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './merchants.scss',
 })
 export class Merchants implements OnInit{
-  private api = inject(KolektaApi);
+  private api = inject(AdminApi);
 
   merchants = signal<Merchant[]>([]);      // signals = reactive state (v17+)
   loading = signal(true);
@@ -38,13 +38,13 @@ export class Merchants implements OnInit{
       error: (err) => alert(err.error?.error ?? 'Delete failed'),
     });
   }
-  createMerchant(): void {
-    const name = this.newMerchantName.trim();
-    if (!name) return;
-    this.creating.set(true);
-    this.api.createMerchant(name).subscribe({
-      next: () => { this.newMerchantName = ''; this.creating.set(false); this.load(); },
-      error: () => { this.creating.set(false); alert('Failed to create merchant'); },
-    });
-  }
+  // createMerchant(): void {
+  //   const name = this.newMerchantName.trim();
+  //   if (!name) return;
+  //   this.creating.set(true);
+  //   this.api.createMerchant(name).subscribe({
+  //     next: () => { this.newMerchantName = ''; this.creating.set(false); this.load(); },
+  //     error: () => { this.creating.set(false); alert('Failed to create merchant'); },
+  //   });
+  // }
 }

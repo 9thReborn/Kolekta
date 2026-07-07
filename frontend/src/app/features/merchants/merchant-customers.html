@@ -1,0 +1,23 @@
+<h2>Customers</h2>
+<form class="inline-form" (ngSubmit)="onboard()">
+  <input [(ngModel)]="newCustomer.name"  name="cname"  placeholder="Customer name" required />
+  <input [(ngModel)]="newCustomer.email" name="cemail" placeholder="Email" type="email" />
+  <input [(ngModel)]="newCustomer.phone" name="cphone" placeholder="Phone" />
+  <button type="submit" [disabled]="saving()">Onboard + issue account</button>
+</form>
+
+@if (loading()) { <p>Loading…</p> }
+@else if (customers().length === 0) { <p>No customers yet.</p> }
+@else {
+  <table>
+    <thead><tr><th>Name</th><th>Email</th><th>Account Number</th><th>Balance</th><th></th></tr></thead>
+    <tbody>
+      @for (c of customers(); track c.customerId) {
+        <tr class="clickable" [routerLink]="['/app/customers', c.customerId, 'statement']">
+          <td>{{ c.name }}</td><td>{{ c.email }}</td><td>{{ c.accountNumber }}</td><td>{{ c.balanceText }}</td>
+          <td><button (click)="close($event, c.customerId)">Close</button></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

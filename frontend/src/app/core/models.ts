@@ -53,3 +53,9 @@ export interface Overview {
   totalCollectedText: string;
   misdirectedOpenCount: number;
 }
+export interface MerchantOverview {
+  customerCount: number;
+  totalCollectedKobo: number;
+  totalCollectedText: string;
+  misdirectedOpenCount: number;
+}

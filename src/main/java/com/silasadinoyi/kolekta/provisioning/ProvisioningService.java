@@ -6,10 +6,13 @@ import com.silasadinoyi.kolekta.domain.merchant.Merchant;
 import com.silasadinoyi.kolekta.domain.merchant.MerchantRepository;
 import com.silasadinoyi.kolekta.domain.virtualaccount.VirtualAccount;
 import com.silasadinoyi.kolekta.domain.virtualaccount.VirtualAccountRepository;
+import com.silasadinoyi.kolekta.domain.virtualaccount.VirtualAccountStatus;
 import com.silasadinoyi.kolekta.domain.virtualaccount.VirtualAccountType;
 import com.silasadinoyi.kolekta.nomba.virtualaccount.VirtualAccountProvider;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -67,6 +70,33 @@ public class ProvisioningService {
             throw new IllegalStateException("Merchant has customers; cannot delete");
         }
         merchants.delete(merchant);
+    }
+
+    @Transactional
+    public void closeCustomer(UUID merchantId, UUID customerId) {
+        Customer customer = customers.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown customer: " + customerId));
+        if (!customer.getMerchantId().equals(merchantId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your customer");
+        }
+        virtualAccounts.findByCustomerId(customerId).ifPresent(va -> {
+            if (va.getStatus() == VirtualAccountStatus.ACTIVE) {
+                provider.expire(va.getAccountRef());
+                va.setStatus(VirtualAccountStatus.CLOSED);
+                virtualAccounts.save(va);
+            }
+        });
+        customer.setStatus("CLOSED");
+        customers.save(customer);
+    }
+
+    /** Ops utility: expire a virtual account at Nomba by accountRef (frees a sandbox slot). */
+    public void expireByRef(String accountRef) {
+        provider.expire(accountRef);
+        virtualAccounts.findByAccountRef(accountRef).ifPresent(va -> {
+            va.setStatus(VirtualAccountStatus.CLOSED);
+            virtualAccounts.save(va);
+        });
     }
 
     private String newRef(String prefix) {

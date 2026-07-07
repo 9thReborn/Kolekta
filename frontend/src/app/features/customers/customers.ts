@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { KolektaApi } from '../../core/kolekta-api';
+import { AdminApi } from '../../core/admin-api.service';
 import { CustomerSummary } from '../../core/models';
 
 @Component({
@@ -12,7 +12,7 @@ import { CustomerSummary } from '../../core/models';
   styleUrl: './customers.scss',
 })
 export class Customers implements OnInit {
-  private api = inject(KolektaApi);
+  private api = inject(AdminApi);
   private route = inject(ActivatedRoute);
 
   merchantId = this.route.snapshot.paramMap.get('merchantId')!;
@@ -33,16 +33,16 @@ export class Customers implements OnInit {
     });
   }
 
-  onboard(): void {
-    if (!this.newCustomer.name.trim()) return;
-    this.saving.set(true);
-    this.api.onboardCustomer(this.merchantId, {
-      name: this.newCustomer.name.trim(),
-      email: this.newCustomer.email.trim(),
-      phone: this.newCustomer.phone.trim(),
-    }).subscribe({
-      next: () => { this.newCustomer = { name: '', email: '', phone: '' }; this.saving.set(false); this.load(); },
-      error: () => { this.saving.set(false); alert('Failed to onboard (sandbox may be at its 2-account limit)'); },
-    });
-  }
+  // onboard(): void {
+  //   if (!this.newCustomer.name.trim()) return;
+  //   this.saving.set(true);
+  //   this.api.onboardCustomer(this.merchantId, {
+  //     name: this.newCustomer.name.trim(),
+  //     email: this.newCustomer.email.trim(),
+  //     phone: this.newCustomer.phone.trim(),
+  //   }).subscribe({
+  //     next: () => { this.newCustomer = { name: '', email: '', phone: '' }; this.saving.set(false); this.load(); },
+  //     error: () => { this.saving.set(false); alert('Failed to onboard (sandbox may be at its 2-account limit)'); },
+  //   });
+  // }
 }

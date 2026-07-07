@@ -1,18 +1,18 @@
 import { Component,inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
-import { AdminApi } from '../../core/admin-api.service';
+import { UserApi } from '../../core/user-api.service';
 import { Statement } from '../../core/models';
 
 @Component({
-  selector: 'app-customer-statement',
+  selector: 'app-merchant-statement',
   standalone: true,
   imports: [DatePipe],
-  templateUrl: './customer-statement.html',
-  styleUrl: './customer-statement.scss',
+  templateUrl: './merchant-statement.html',
+  styleUrl: './merchant-statement.scss',
 })
-export class CustomerStatement implements OnInit  {
-  private api = inject(AdminApi);
+export class MerchantStatement implements OnInit  {
+  private api = inject(UserApi);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
 
